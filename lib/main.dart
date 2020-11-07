@@ -3,7 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ketsuro/src/components/login/index.dart';
-import 'package:ketsuro/src/screens/splash.dart';
+import 'package:ketsuro/src/screens/index.dart';
 import 'package:momentum/momentum.dart';
 
 import 'src/common/colors.dart';
@@ -54,7 +54,17 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Ketsuro(),
+      home: MomentumBuilder(
+        controllers: [LoginController],
+        builder: (context, snapshot) {
+          var model = snapshot<LoginModel>();
+          if (model.isLoggedIn) {
+            return Home();
+          } else {
+            return Ketsuro();
+          }
+        },
+      ),
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         scaffoldBackgroundColor: ketsuroBgWhite,

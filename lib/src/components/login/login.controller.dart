@@ -39,9 +39,9 @@ class LoginController extends MomentumController<LoginModel> {
 
       final User currentUser = _auth.currentUser;
       assert(user.uid == currentUser.uid);
-      
-      print('signInWithGoogle succeeded: $user');
 
+      print('signInWithGoogle succeeded: $user');
+      model.update(isLoggedIn: true);
       return user;
     }
 

@@ -1,8 +1,12 @@
-
-import 'package:cached_network_image/cached_network_image.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
-import 'package:ketsuro/src/common/colors.dart';
+
+// Package imports:
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:relative_scale/relative_scale.dart';
+
+// Project imports:
+import 'package:ketsuro/src/common/colors.dart';
 
 class VideoCard extends StatefulWidget {
   final String thumbnail;

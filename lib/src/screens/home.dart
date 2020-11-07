@@ -1,14 +1,14 @@
-import 'package:cached_network_image/cached_network_image.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
-import 'package:googleapis/youtube/v3.dart';
-import 'package:googleapis_auth/auth_io.dart';
+
+// Package imports:
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:momentum/momentum.dart';
+import 'package:relative_scale/relative_scale.dart';
+
+// Project imports:
 import 'package:ketsuro/src/common/colors.dart';
 import 'package:ketsuro/src/components/youtube/index.dart';
-import 'package:ketsuro/src/config/config.dart';
-import 'package:ketsuro/src/widgets/stack_card.dart';
-import 'package:ketsuro/src/widgets/video_card.dart';
-import 'package:relative_scale/relative_scale.dart';
-import 'package:momentum/momentum.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -38,7 +38,7 @@ class _HomeState extends MomentumState<Home> with RelativeScale {
   @override
   Widget build(BuildContext context) {
     PageController controller =
-        PageController(initialPage: currentPage.toInt(), viewportFraction: 0.8);
+        PageController(initialPage: (currentPage / 2).floor(), viewportFraction: 0.8);
     controller.addListener(() {
       setState(() {
         currentPage = controller.page;

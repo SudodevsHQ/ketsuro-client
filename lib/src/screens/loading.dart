@@ -1,9 +1,13 @@
+// Flutter imports:
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:ketsuro/src/components/youtube/index.dart';
-import 'package:relative_scale/relative_scale.dart';
-import 'package:momentum/momentum.dart';
 
+// Package imports:
+import 'package:momentum/momentum.dart';
+import 'package:relative_scale/relative_scale.dart';
+
+// Project imports:
+import 'package:ketsuro/src/components/youtube/index.dart';
 import 'home.dart';
 
 class Loading extends StatefulWidget {

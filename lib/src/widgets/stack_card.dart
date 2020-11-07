@@ -1,7 +1,8 @@
+// Dart imports:
 import 'dart:math';
 import 'dart:ui';
 
-import 'package:cached_network_image/cached_network_image.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
 
 var cardAspectRatio = 12.0 / 20.0;

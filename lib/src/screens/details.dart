@@ -1,7 +1,12 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
-import 'package:ketsuro/src/common/colors.dart';
+
+// Package imports:
 import 'package:relative_scale/relative_scale.dart';
 import 'package:video_player/video_player.dart';
+
+// Project imports:
+import 'package:ketsuro/src/common/colors.dart';
 
 class Details extends StatefulWidget {
   @override

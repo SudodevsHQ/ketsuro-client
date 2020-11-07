@@ -1,9 +1,11 @@
+// Package imports:
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:ketsuro/src/config/config.dart';
 import 'package:momentum/momentum.dart';
 
+// Project imports:
+import 'package:ketsuro/src/config/config.dart';
 import 'index.dart';
 
 class LoginController extends MomentumController<LoginModel> {

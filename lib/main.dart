@@ -1,13 +1,16 @@
+// Flutter imports:
+import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:ketsuro/src/components/login/index.dart';
-import 'package:ketsuro/src/components/youtube/index.dart';
-import 'package:ketsuro/src/screens/home.dart';
-import 'package:ketsuro/src/screens/index.dart';
 import 'package:momentum/momentum.dart';
 
+// Project imports:
+import 'package:ketsuro/src/components/login/index.dart';
+import 'package:ketsuro/src/components/youtube/index.dart';
+import 'package:ketsuro/src/screens/index.dart';
 import 'src/common/colors.dart';
 import 'src/services/client_db.dart';
 

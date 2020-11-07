@@ -1,13 +1,15 @@
-import 'package:flushbar/flushbar.dart';
+// Flutter imports:
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:ketsuro/src/common/colors.dart';
-import 'package:ketsuro/src/components/login/index.dart';
-import 'package:ketsuro/src/screens/home.dart';
-import 'package:ketsuro/src/screens/home_old.dart';
+
+// Package imports:
+import 'package:flushbar/flushbar.dart';
 import 'package:momentum/momentum.dart';
 import 'package:relative_scale/relative_scale.dart';
 
+// Project imports:
+import 'package:ketsuro/src/common/colors.dart';
+import 'package:ketsuro/src/components/login/index.dart';
 import 'index.dart';
 
 class Ketsuro extends StatefulWidget {

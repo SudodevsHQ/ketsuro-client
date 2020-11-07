@@ -25,6 +25,7 @@ dependencies:
   momentum: ^1.3.2
   relative_scale: ^1.1.0
   shared_preferences: ^0.5.12+4
+  video_player: ^1.0.0
 
 dev_dependencies:
   flutter_test:

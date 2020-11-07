@@ -1,13 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:ketsuro/src/config/config.dart';
 import 'package:momentum/momentum.dart';
 
 import 'index.dart';
 
 class LoginController extends MomentumController<LoginModel> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final GoogleSignIn googleSignIn = GoogleSignIn();
+  final GoogleSignIn googleSignIn = GoogleSignIn(scopes: scopes);
 
   @override
   LoginModel init() {
@@ -24,6 +25,7 @@ class LoginController extends MomentumController<LoginModel> {
     final GoogleSignInAuthentication googleSignInAuthentication =
         await googleSignInAccount.authentication;
 
+    model.update(accessToken: googleSignInAuthentication.idToken);
     final AuthCredential credential = GoogleAuthProvider.credential(
       accessToken: googleSignInAuthentication.accessToken,
       idToken: googleSignInAuthentication.idToken,

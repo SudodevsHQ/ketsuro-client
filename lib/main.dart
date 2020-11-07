@@ -67,15 +67,16 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        scaffoldBackgroundColor: ketsuroBgWhite,
+        scaffoldBackgroundColor: ketsuroBrown,
+        // brightness: Brightness.dark,
         textTheme: GoogleFonts.poppinsTextTheme(
           Theme.of(context).textTheme,
         ).copyWith(
           body1: TextStyle(
-            color: ketsuroBlack,
+            color: ketsuroBgWhite,
           ),
           body2: TextStyle(
-            color: ketsuroBlack,
+            color: ketsuroBgWhite,
           ),
         ),
       ),

@@ -4,20 +4,25 @@ import 'package:momentum/momentum.dart';
 import 'index.dart';
 
 class LoginModel extends MomentumModel<LoginController> with EquatableMixin {
-  LoginModel(LoginController controller, {this.isLoggedIn}) : super(controller);
+  LoginModel(LoginController controller, {this.isLoggedIn, this.accessToken})
+      : super(controller);
 
   final bool isLoggedIn;
+  final String accessToken;
 
   @override
-  void update({bool isLoggedIn}) {
-    LoginModel(controller, isLoggedIn: isLoggedIn ?? this.isLoggedIn)
-        .updateMomentum();
+  void update({bool isLoggedIn, String accessToken}) {
+    LoginModel(
+      controller,
+      isLoggedIn: isLoggedIn ?? this.isLoggedIn,
+      accessToken: accessToken ?? this.accessToken,
+    ).updateMomentum();
   }
-
 
   Map<String, dynamic> toJson() {
     return {
       'isLoggedIn': isLoggedIn,
+      'accessToken': accessToken,
     };
   }
 
@@ -27,11 +32,13 @@ class LoginModel extends MomentumModel<LoginController> with EquatableMixin {
     return LoginModel(
       controller,
       isLoggedIn: json['isLoggedIn'],
+      accessToken: json['accessToken']
     );
   }
 
   @override
   List<Object> get props => [
         isLoggedIn,
+        accessToken,
       ];
 }

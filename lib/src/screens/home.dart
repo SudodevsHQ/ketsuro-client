@@ -49,17 +49,17 @@ class _HomeState extends MomentumState<Home> with RelativeScale {
       builder: (context, snapshot) {
         var model = snapshot<YoutubeModel>();
         var videos = model.videos;
-        return videos.isEmpty
-            ? Center(
-                child: CircularProgressIndicator(),
-              )
-            : Scaffold(
+        return  Scaffold(
                 appBar: AppBar(
                   backgroundColor: Colors.transparent,
                   elevation: 0,
                 ),
                 drawer: Drawer(),
-                body: CustomScrollView(
+                body: videos.isEmpty
+            ? Center(
+                child: CircularProgressIndicator(),
+              )
+            : CustomScrollView(
                   slivers: [
                     SliverToBoxAdapter(
                       child: Padding(

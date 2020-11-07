@@ -40,23 +40,24 @@ class YoutubeController extends MomentumController<YoutubeModel> {
         thumbnail: element.snippet.thumbnails.maxres.url,
       ));
     });
+    model.update(videos: res);
+  }
 
-    Future getVideos() async {
-      // ignore: cancel_subscriptions
-      // var questionsSubscription = FirebaseFirestore.instance
-      //     .collection('questions')
-      //     .where('course', isEqualTo: model.course.id)
-      //     .snapshots()
-      //     .listen((querySnapshot) {
-      //   model.update(questionsSnapshot: querySnapshot);
-      //   model.questionsSubscription.onError((error, stackTrace) {
-      //     print(error);
-      //     print(stackTrace);
-      //   });
-      // });
+  Future getVideos() async {
+    // ignore: cancel_subscriptions
+    // var questionsSubscription = FirebaseFirestore.instance
+    //     .collection('questions')
+    //     .where('course', isEqualTo: model.course.id)
+    //     .snapshots()
+    //     .listen((querySnapshot) {
+    //   model.update(questionsSnapshot: querySnapshot);
+    //   model.questionsSubscription.onError((error, stackTrace) {
+    //     print(error);
+    //     print(stackTrace);
+    //   });
+    // });
 
-      // model.update(
-      //     questionsSubscription: questionsSubscription, isLoading: false);
-    }
+    // model.update(
+    //     questionsSubscription: questionsSubscription, isLoading: false);
   }
 }

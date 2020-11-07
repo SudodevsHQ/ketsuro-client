@@ -15,7 +15,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       home: Ketsuro(),
       debugShowCheckedModeBanner: false,
+      
       theme: ThemeData(
+        scaffoldBackgroundColor: ketsuroBgWhite,
         textTheme: GoogleFonts.poppinsTextTheme(
           Theme.of(context).textTheme,
         ).copyWith(
@@ -25,6 +27,7 @@ class MyApp extends StatelessWidget {
           body2: TextStyle(
             color: ketsuroBlack,
           ),
+          
         ),
       ),
     );

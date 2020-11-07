@@ -13,6 +13,7 @@ class LoginController extends MomentumController<LoginModel> {
   LoginModel init() {
     return LoginModel(
       this,
+      isLoggedIn: false,
     );
   }
 

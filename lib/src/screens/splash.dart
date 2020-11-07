@@ -1,4 +1,10 @@
+import 'package:flushbar/flushbar.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:ketsuro/src/common/colors.dart';
+import 'package:ketsuro/src/components/login/index.dart';
+import 'package:ketsuro/src/screens/home.dart';
+import 'package:momentum/momentum.dart';
 import 'package:relative_scale/relative_scale.dart';
 
 class Ketsuro extends StatefulWidget {
@@ -16,7 +22,6 @@ class _KetsuroState extends State<Ketsuro> with RelativeScale {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
       body: Stack(
         children: [
           Positioned.fill(
@@ -56,13 +61,58 @@ class _KetsuroState extends State<Ketsuro> with RelativeScale {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation(Color(0xFFF05454 )),
+                  MomentumBuilder(
+                    controllers: [LoginController],
+                    builder: (context, snapshot) {
+                      var model = snapshot<LoginModel>();
+                      if (model.isLoggedIn) {
+                        return CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation(Color(0xFFF05454)),
+                        );
+                      } else {
+                        return FlatButton.icon(
+                          color: ketsuroRed,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8)),
+                          onPressed: () async {
+                            var controller = model.controller;
+                            Flushbar(
+                              message: "Processing!",
+                              duration: Duration(seconds: 2),
+                            )..show(context);
+                            var res = await controller.signInWithGoogle();
+
+                            if (res == null) {
+                              Flushbar(
+                                message: "Error in logging in!",
+                                duration: Duration(seconds: 2),
+                              )..show(context);
+                            } else {
+                              Navigator.push(
+                                context,
+                                CupertinoPageRoute(
+                                  builder: (_) => Home(),
+                                ),
+                              );
+                            }
+                          },
+                          icon: Icon(
+                            Icons.play_arrow,
+                            color: ketsuroBgWhite,
+                          ),
+                          label: Text(
+                            'Login with Youtube',
+                            style: TextStyle(
+                              color: ketsuroBgWhite,
+                            ),
+                          ),
+                        );
+                      }
+                    },
                   ),
                   SizedBox(
                     height: sy(30),
                   )
-                  
                 ],
               ),
             ),

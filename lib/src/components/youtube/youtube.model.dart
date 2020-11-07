@@ -4,15 +4,15 @@ import 'package:momentum/momentum.dart';
 import 'index.dart';
 
 class YoutubeModel extends MomentumModel<YoutubeController> {
-  YoutubeModel(YoutubeController controller, {this.video}) : super(controller);
+  YoutubeModel(YoutubeController controller, {this.videos}) : super(controller);
 
-  final VideoData video;
+  final List<VideoData> videos;
 
   @override
-  void update({final VideoData video}) {
+  void update({final List<VideoData> videos}) {
     YoutubeModel(
       controller,
-      video: video ?? this.video
+      videos: videos ?? this.videos
     ).updateMomentum();
   }
 }

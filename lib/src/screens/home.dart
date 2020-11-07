@@ -1,19 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:googleapis/youtube/v3.dart';
 import 'package:googleapis_auth/auth_io.dart';
 import 'package:ketsuro/src/common/colors.dart';
-import 'package:ketsuro/src/components/login/index.dart';
+import 'package:ketsuro/src/components/youtube/index.dart';
 import 'package:ketsuro/src/config/config.dart';
-import 'package:ketsuro/src/screens/index.dart';
-import 'package:ketsuro/src/screens/loading.dart';
-import 'package:momentum/momentum.dart';
+import 'package:ketsuro/src/widgets/stack_card.dart';
+import 'package:ketsuro/src/widgets/video_card.dart';
 import 'package:relative_scale/relative_scale.dart';
-
-import '../../main.dart';
+import 'package:momentum/momentum.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -21,174 +16,181 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends MomentumState<Home> with RelativeScale {
-  var res = [];
+  List<Map<String, String>> res = [];
+
   @override
   void didChangeDependencies() {
-    super.didChangeDependencies();
     initRelativeScaler(context);
+    super.didChangeDependencies();
   }
 
   @override
   void initMomentumState() async {
-    var httpClient = await clientViaServiceAccount(credentials, scopes);
+    var ytController = Momentum.controller<YoutubeController>(context);
+    var model = ytController.model;
+    currentPage = model.videos.length - 1.0;
 
-    var youtube = new YoutubeApi(httpClient);
-    var subs = await youtube.videos.list(
-      [
-        'snippet',
-      ],
-      chart: 'mostPopular',
-      videoCategoryId: '28',
-      maxResults: 10,
-      regionCode: 'US',
-    );
-    // print(subs.items);
-    subs.items.forEach((element) {
-      print(element.snippet.title +
-          'https://www.youtube.com/watch?v=' +
-          element.id);
-
-      res.add({
-        'url': 'https://www.youtube.com/watch?v=' + element.id,
-        'title': element.snippet.title,
-        'channel': element.snippet.channelTitle,
-        'thumbnail': element.snippet.thumbnails.high.url
-      });
-    });
-
-    setState(() {});
     super.initMomentumState();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Trending Videos',
-          style: TextStyle(color: ketsuroBgWhite, fontWeight: FontWeight.w900),
-        ),
-        backgroundColor: Colors.transparent,
-        centerTitle: true,
-        leading: IconButton(
-          icon: Icon(Icons.exit_to_app, color: ketsuroBgWhite),
-          onPressed: () async {
-            var controller = Momentum.controller<LoginController>(context);
-            await controller.signOutGoogle();
-            Momentum.restart(context, momentum());
-          },
-        ),
-        elevation: 0,
-        actions: [
-          IconButton(
-            icon: Icon(Icons.ac_unit),
-            onPressed: () async {
-              Navigator.push(
-                context,
-                CupertinoPageRoute(
-                  builder: (_) => Details(),
-                ),
-              );
-            },
-          ),
-        ],
-      ),
-      body: Padding(
-        padding: EdgeInsets.only(left: sx(30), right: sx(30), top: sy(10)),
-        child: res.isEmpty
-            ? Center(child: CircularProgressIndicator())
-            : ListView.separated(
-                itemCount: res.length,
-                itemBuilder: (context, index) {
-                  var current = res[index];
-                  return VideoCard(
-                    channel: current['channel'],
-                    title: current['title'],
-                    thumbnail: current['thumbnail'],
-                    url: current['url'],
-                  );
-                },
-                separatorBuilder: (context, index) => SizedBox(height: sy(6)),
-              ),
-      ),
-    );
-  }
-}
-
-class VideoCard extends StatefulWidget {
-  final String thumbnail;
-  final String url;
-  final String title;
-  final String channel;
-
-  const VideoCard({Key key, this.thumbnail, this.url, this.title, this.channel})
-      : super(key: key);
-  @override
-  _VideoCardState createState() => _VideoCardState();
-}
-
-class _VideoCardState extends State<VideoCard> with RelativeScale {
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    initRelativeScaler(context);
-  }
+  double currentPage;
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 8,
-      shadowColor: ketsuroGrey.withOpacity(0.3),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          AspectRatio(
-            aspectRatio: 360 / 200,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: CachedNetworkImage(
-                imageUrl: widget.thumbnail,
-                fit: BoxFit.cover,
-                placeholder: (context, url) {
-                  return Center(
-                      child: Image.asset(
-                    'assets/undraw_video_files_fu10 1.png',
-                    scale: 3,
-                  ));
-                },
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(
-                left: 18.0, top: 8, bottom: 24, right: 18),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  widget.title,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                      fontSize: sx(20),
-                      color: ketsuroBlack,
-                      fontWeight: FontWeight.w900),
+    PageController controller =
+        PageController(initialPage: currentPage.toInt(), viewportFraction: 0.8);
+    controller.addListener(() {
+      setState(() {
+        currentPage = controller.page;
+      });
+    });
+    return MomentumBuilder(
+      controllers: [YoutubeController],
+      builder: (context, snapshot) {
+        var model = snapshot<YoutubeModel>();
+        var videos = model.videos;
+        return videos.isEmpty
+            ? Center(
+                child: CircularProgressIndicator(),
+              )
+            : Scaffold(
+                appBar: AppBar(
+                  backgroundColor: Colors.transparent,
+                  elevation: 0,
                 ),
-                Text(
-                  widget.channel,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                      fontSize: sx(15),
-                      color: ketsuroGrey,
-                      fontWeight: FontWeight.bold),
-                )
-              ],
-            ),
-          )
-        ],
-      ),
+                drawer: Drawer(),
+                body: CustomScrollView(
+                  slivers: [
+                    SliverToBoxAdapter(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 28.0),
+                        child: Text(
+                          'Trending Videos',
+                          style: TextStyle(
+                            fontSize: sx(32),
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SliverToBoxAdapter(
+                      child: Padding(
+                        padding: EdgeInsets.only(left: 28.0, bottom: sy(30)),
+                        child: Text(
+                          'Showing best videos for you',
+                          style: TextStyle(color: ketsuroGrey),
+                        ),
+                      ),
+                    ),
+                    SliverToBoxAdapter(
+                      child: Container(
+                        height: screenHeight * 0.35,
+                        child: PageView.builder(
+                          controller: controller,
+                          pageSnapping: true,
+                          scrollDirection: Axis.horizontal,
+                          itemCount: videos.length,
+                          itemBuilder: (context, index) {
+                            var current = videos[index];
+
+                            return Container(
+                              height: screenHeight * 0.3,
+                              child: AnimatedPadding(
+                                curve: Curves.easeInQuad,
+                                duration: Duration(milliseconds: 200),
+                                padding: index == currentPage
+                                    ? EdgeInsets.all(8.0)
+                                    : EdgeInsets.all(18.0),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(16),
+                                  child: CachedNetworkImage(
+                                    imageUrl: current.thumbnail,
+                                    fit: BoxFit.fitHeight,
+                                    placeholder: (context, url) {
+                                      return Center(
+                                        child: Image.asset(
+                                          'assets/undraw_video_files_fu10 1.png',
+                                          scale: 3,
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                    SliverToBoxAdapter(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 28.0, right: 28),
+                        child: Text(videos[currentPage.toInt()].title,
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: sx(22)),
+                            maxLines: 1),
+                      ),
+                    ),
+                    SliverToBoxAdapter(
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                            left: 28.0, right: 28, top: 18),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              'Elon Musk',
+                              style: TextStyle(
+                                color: ketsuroGrey,
+                                fontWeight: FontWeight.bold,
+                                fontSize: sx(22),
+                              ),
+                            ),
+                            Image.asset('assets/youtube.png', scale: 2)
+                          ],
+                        ),
+                      ),
+                    ),
+                    SliverToBoxAdapter(
+                        child: Padding(
+                      padding:
+                          const EdgeInsets.only(left: 28.0, right: 28, top: 18),
+                      child: Card(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16)),
+                        color: ketsuroCardColor,
+                        child: Padding(
+                          padding: const EdgeInsets.all(18.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Overview',
+                                style: TextStyle(
+                                    color: ketsuroRed,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: sx(22)),
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                  '''Today we are finally liquid, calling the Rtx 3090 which is something that I've been so excited to do ever since it was first announced, but also a bit hesitant because this thing pulls around 350 watts on its own. S o, in this video, we'll be taking a look at how much radiator volume you actually need to keep this thing. 
+
+Keep in mind that for the RTX 3090 you also have some memory modules on the back of the PCB as well and this is the water block that we'll be using with it. 
+ 
+You'd at least expect these to be cut to the correct size, not to mention the possibility of user error here is pretty high, but what we're left with is an insanely dense piece of hardware and that gets me really excited for all of the possibilities when it comes to installing this into your board called PC even in a mid-tower build, this will give you a bit more breathing room for a pump and reservoir compared to your standard water block, which will typically be around 50 mils longer, but now let's talk about cooling. ''')
+                            ],
+                          ),
+                        ),
+                      ),
+                    ))
+                  ],
+                ));
+      },
     );
   }
 }

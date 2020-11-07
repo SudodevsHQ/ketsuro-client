@@ -3,6 +3,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ketsuro/src/components/login/index.dart';
+import 'package:ketsuro/src/components/youtube/index.dart';
+import 'package:ketsuro/src/screens/home.dart';
 import 'package:ketsuro/src/screens/index.dart';
 import 'package:momentum/momentum.dart';
 
@@ -23,6 +25,7 @@ Momentum momentum() {
     child: MyApp(),
     controllers: [
       LoginController(),
+      YoutubeController(),
     ],
     services: [
       ClientDB(),
@@ -55,11 +58,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: MomentumBuilder(
-        controllers: [LoginController],
+        controllers: [
+          LoginController,
+        ],
         builder: (context, snapshot) {
           var model = snapshot<LoginModel>();
           if (model.isLoggedIn) {
-            return Home();
+            return Loading();
           } else {
             return Ketsuro();
           }

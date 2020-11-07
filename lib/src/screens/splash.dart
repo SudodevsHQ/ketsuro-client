@@ -4,8 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:ketsuro/src/common/colors.dart';
 import 'package:ketsuro/src/components/login/index.dart';
 import 'package:ketsuro/src/screens/home.dart';
+import 'package:ketsuro/src/screens/home_old.dart';
 import 'package:momentum/momentum.dart';
 import 'package:relative_scale/relative_scale.dart';
+
+import 'index.dart';
 
 class Ketsuro extends StatefulWidget {
   @override
@@ -91,7 +94,7 @@ class _KetsuroState extends State<Ketsuro> with RelativeScale {
                               Navigator.push(
                                 context,
                                 CupertinoPageRoute(
-                                  builder: (_) => Home(),
+                                  builder: (_) => Loading(),
                                 ),
                               );
                             }

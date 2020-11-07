@@ -1,16 +1,35 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:ketsuro/src/components/youtube/index.dart';
 import 'package:relative_scale/relative_scale.dart';
+import 'package:momentum/momentum.dart';
+
+import 'home.dart';
 
 class Loading extends StatefulWidget {
   @override
   _LoadingState createState() => _LoadingState();
 }
 
-class _LoadingState extends State<Loading> with RelativeScale {
+class _LoadingState extends MomentumState<Loading> with RelativeScale {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     initRelativeScaler(context);
+  }
+
+  @override
+  void initMomentumState() async {
+    var ytController = Momentum.controller<YoutubeController>(context);
+    await ytController.getTrendingTech();
+    Navigator.push(
+      context,
+      CupertinoPageRoute(
+        builder: (_) => Home(),
+      ),
+    );
+
+    super.initMomentumState();
   }
 
   @override

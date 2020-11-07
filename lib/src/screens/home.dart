@@ -26,9 +26,8 @@ class _HomeState extends MomentumState<Home> with RelativeScale {
 
   @override
   void initMomentumState() async {
-    var ytController = Momentum.controller<YoutubeController>(context);
-    var model = ytController.model;
-    currentPage = model.videos.length - 1.0;
+
+    currentPage = 0;
 
     super.initMomentumState();
   }
@@ -38,7 +37,7 @@ class _HomeState extends MomentumState<Home> with RelativeScale {
   @override
   Widget build(BuildContext context) {
     PageController controller =
-        PageController(initialPage: (currentPage / 2).floor(), viewportFraction: 0.8);
+        PageController(initialPage: (currentPage).floor(), viewportFraction: 0.8);
     controller.addListener(() {
       setState(() {
         currentPage = controller.page;

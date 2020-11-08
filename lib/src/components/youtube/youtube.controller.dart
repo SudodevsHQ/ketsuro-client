@@ -29,7 +29,9 @@ class YoutubeController extends MomentumController<YoutubeModel> {
     String key = 'AIzaSyDdOIWH8lMlUFwAV0vQTM68Xfars8u7MJc';
     YoutubeAPI ytApi = new YoutubeAPI(key);
 
-    var ress = await ytApi.search('Linus Tech Tips',);
+    var ress = await ytApi.search(
+      'Linus Tech Tips',
+    );
     ress.forEach((element) {
       res.add(VideoData(
           url: 'https://www.youtube.com/watch?v=' + element.id,
@@ -68,6 +70,7 @@ class YoutubeController extends MomentumController<YoutubeModel> {
     try {
       // print(snapshot.docs.length);
       var ok = snapshot.docs.map((e) => e.data()['video_id']).toList();
+      print(ok);
       for (var id in videoIds) {
         if (!ok.contains(id)) {
           var res = await http.get('https://621e47ca71ab.ngrok.io/video/$id');
@@ -86,6 +89,12 @@ class YoutubeController extends MomentumController<YoutubeModel> {
 
   Future<void> disposeStream() async {
     await model.videoSubscription.cancel();
+  }
+
+  Future getVideo(String requestId, String id) async {
+    var res = await http.get(
+        'https://621e47ca71ab.ngrok.io/summarize/$id?request_id=$requestId');
+    print(res.body);
   }
 
   Future<bool> addQuestion() async {

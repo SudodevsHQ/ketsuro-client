@@ -147,36 +147,25 @@ class _HomeState extends MomentumState<Home> with RelativeScale {
                                             child: Icon(Icons.play_arrow),
                                             onPressed: () {
                                               var summary = db.docs
-                                                      .where((element) =>
-                                                          element.data()[
-                                                              'video_id'] ==
-                                                          videos[currentPage
-                                                                  .toInt()]
-                                                              .id)
-                                                      .isNotEmpty
-                                                  ? db.docs
-                                                      .where((element) =>
-                                                          element.data()[
-                                                              'video_id'] ==
-                                                          videos[currentPage
-                                                                  .toInt()]
-                                                              .id)
-                                                      .first['summary']
-                                                  : null;
+                                        .where((element) =>
+                                            element.data()['video_id'] ==
+                                            videos[currentPage.toInt()].id)
+                                        .isNotEmpty
+                                    ? db.docs
+                                        .where((element) =>
+                                            element.data()['video_id'] ==
+                                            videos[currentPage.toInt()].id)
+                                        .first['summary']
+                                    : null;
 
                                               if (summary != null) {
-                                                var vid = db.docs
-                                                    .where((element) =>
-                                                        element['video_id'] ==
-                                                        videos[currentPage
-                                                            .toInt()])
-                                                    .first['request_id'];
+                                                
                                                 Navigator.push(
                                                   context,
                                                   CupertinoPageRoute(
                                                     builder: (_) => Details(
-                                                      summary: summary,
-                                                      videoId: vid,
+                                                     
+                                                      video: current
                                                     ),
                                                   ),
                                                 );

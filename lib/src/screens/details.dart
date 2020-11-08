@@ -34,7 +34,6 @@ class _DetailsState extends MomentumState<Details> with RelativeScale {
 
   @override
   void initMomentumState() async {
-    var controller = Momentum.controller<YoutubeController>(context);
 
 
     _controller = VideoPlayerController.network(
@@ -47,8 +46,6 @@ class _DetailsState extends MomentumState<Details> with RelativeScale {
     });
     _controller.setLooping(true);
     _controller.initialize();
-
-   
 
     super.initState();
   }
@@ -97,7 +94,9 @@ class _DetailsState extends MomentumState<Details> with RelativeScale {
                           child: Stack(
                                   alignment: Alignment.bottomCenter,
                                   children: <Widget>[
-                                    VideoPlayer(_controller),
+
+                                    VideoPlayer(_controller, ),
+
                                     // ClosedCaption(text: _controller.value.caption.text),
                                     _ControlsOverlay(controller: _controller),
                                   ],

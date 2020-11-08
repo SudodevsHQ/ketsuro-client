@@ -43,7 +43,7 @@ class _LoadingState extends MomentumState<Loading> with RelativeScale {
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text('Loading Videos',
+                child: Text('Loading...',
                     style: TextStyle(
                       fontSize: sx(25),
                       fontWeight: FontWeight.bold,

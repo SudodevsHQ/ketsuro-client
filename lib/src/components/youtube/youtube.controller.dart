@@ -73,14 +73,14 @@ class YoutubeController extends MomentumController<YoutubeModel> {
       print(ok);
       for (var id in videoIds) {
         if (!ok.contains(id)) {
-          var res = await http.get('http://15.207.237.105:8000/video/$id');
+          var res = await http.get('https://4a511f28c537.ngrok.io:8000/video/$id');
           print(res.reasonPhrase);
           print('noexist');
         }
       }
     } catch (e) {
       for (var id in videoIds) {
-        var res = await http.get('http://15.207.237.105:8000/video/$id');
+        var res = await http.get('https://4a511f28c537.ngrok.io:8000/video/$id');
         print(res.reasonPhrase);
         print('request');
       }
@@ -93,7 +93,7 @@ class YoutubeController extends MomentumController<YoutubeModel> {
 
   Future getVideo(String requestId, String id) async {
     var res = await http.get(
-        'https://15.207.237.105:8000/summarize/$id?request_id=$requestId');
+        'https://4a511f28c537.ngrok.io:8000/summarize/$id?request_id=$requestId');
     print(res.body);
   }
 

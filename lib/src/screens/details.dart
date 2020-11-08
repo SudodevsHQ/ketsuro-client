@@ -35,14 +35,10 @@ class _DetailsState extends MomentumState<Details> with RelativeScale {
   @override
   void initMomentumState() async {
     var controller = Momentum.controller<YoutubeController>(context);
-    var model = controller.model;
-    var url = model.videoSnapshot.docs
-        .where((element) => element.data()['video_id'] == widget.video.id)
-        .first
-        .data()['summary_video'];
+
 
     _controller = VideoPlayerController.network(
-      'https://621e47ca71ab.ngrok.io/static/iZBIeM2zE-I.mp4',
+      widget.god,
       videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true),
     );
 
@@ -52,15 +48,7 @@ class _DetailsState extends MomentumState<Details> with RelativeScale {
     _controller.setLooping(true);
     _controller.initialize();
 
-    if (url == null) {
-      var requestId = model.videoSnapshot.docs
-          .where((element) => element.data()['video_id'] == widget.video.id)
-          .first
-          .data()['request_id'];
-
-      print(requestId);
-      await controller.getVideo(requestId, widget.video.id);
-    }
+   
 
     super.initState();
   }

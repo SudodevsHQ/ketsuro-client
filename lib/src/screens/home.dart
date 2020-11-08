@@ -53,6 +53,7 @@ class _HomeState extends MomentumState<Home> with RelativeScale {
       controllers: [YoutubeController],
       builder: (context, snapshot) {
         var model = snapshot<YoutubeModel>();
+        var ytController = model.controller;
         var db = model.videoSnapshot;
         var videos = model.videos;
         return Scaffold(
@@ -67,8 +68,7 @@ class _HomeState extends MomentumState<Home> with RelativeScale {
                 onFieldSubmitted: (query) async {
                   Navigator.push(
                       context, CupertinoPageRoute(builder: (_) => Loading()));
-                  await model.controller
-                      .getTrendingTech(query);
+                  await model.controller.getTrendingTech(query);
                   await model.controller.getCacheVideos();
                   await model.controller.doRequest();
                   Navigator.pop(context);
@@ -161,7 +161,7 @@ class _HomeState extends MomentumState<Home> with RelativeScale {
                                             heroTag: current.thumbnail,
                                             backgroundColor: ketsuroRed,
                                             child: Icon(Icons.play_arrow),
-                                            onPressed: () {
+                                            onPressed: () async {
                                               var summary = db.docs
                                                       .where((element) =>
                                                           element.data()[
@@ -181,8 +181,24 @@ class _HomeState extends MomentumState<Home> with RelativeScale {
                                                   : null;
 
                                               if (summary != null) {
+                                                Navigator.push(
+                                                  context,
+                                                  CupertinoPageRoute(
+                                                    builder: (_) => Loading(),
+                                                  ),
+                                                );
+                                                var reqId = db.docs
+                                                    .where((element) =>
+                                                        element.data()[
+                                                            'video_id'] ==
+                                                        videos[currentPage
+                                                                .toInt()]
+                                                            .id)
+                                                    .first['request_id'];
+                                                await ytController.getVideo(
+                                                    reqId, current.id);
                                                 var god =
-                                                    'https://621e47ca71ab.ngrok.io/static/' +
+                                                    'https://4a511f28c537.ngrok.io/static/' +
                                                         current.id +
                                                         '.mkv';
                                                 print(god);
@@ -201,8 +217,6 @@ class _HomeState extends MomentumState<Home> with RelativeScale {
                                                       Duration(seconds: 2),
                                                 )..show(context);
                                               }
-
-
                                             },
                                           ),
                                         ),
@@ -236,7 +250,7 @@ class _HomeState extends MomentumState<Home> with RelativeScale {
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               Expanded(
-                                                              child: Text(
+                                child: Text(
                                   videos[currentPage.toInt()].channel,
                                   maxLines: 1,
                                   style: TextStyle(

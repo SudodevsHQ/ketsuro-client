@@ -275,8 +275,7 @@ class _PlayerVideoState extends State<PlayerVideo> {
 
   @override
   void initState() {
-    var god = 'https://srv-store3.gofile.io/download/' +
-        widget.url.split('?c=')[1] +
+    var god = 'http://15.207.237.105/static/' +
         widget.thing +
         '.mp4';
     print(god);

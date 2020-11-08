@@ -35,6 +35,7 @@ class _DetailsState extends MomentumState<Details> with RelativeScale {
   @override
   void initMomentumState() async {
 
+
     _controller = VideoPlayerController.network(
       widget.god,
       videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true),
@@ -93,7 +94,9 @@ class _DetailsState extends MomentumState<Details> with RelativeScale {
                           child: Stack(
                                   alignment: Alignment.bottomCenter,
                                   children: <Widget>[
+
                                     VideoPlayer(_controller, ),
+
                                     // ClosedCaption(text: _controller.value.caption.text),
                                     _ControlsOverlay(controller: _controller),
                                   ],

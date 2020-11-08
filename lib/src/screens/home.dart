@@ -198,11 +198,12 @@ class _HomeState extends MomentumState<Home> with RelativeScale {
                                                 await ytController.getVideo(
                                                     reqId, current.id);
                                                 var god =
+
                                                     'https://api.metaboy.info/static/' +
                                                         current.id +
                                                         '.mkv';
                                                 print(god);
-                                                Navigator.pushReplacement(
+                                                Navigator.push(
                                                   context,
                                                   CupertinoPageRoute(
                                                     builder: (_) => Details(

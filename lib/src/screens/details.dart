@@ -1,16 +1,16 @@
 // Flutter imports:
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:ketsuro/src/components/youtube/index.dart';
-import 'package:ketsuro/src/data/index.dart';
-import 'package:momentum/momentum.dart';
 
 // Package imports:
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:momentum/momentum.dart';
 import 'package:relative_scale/relative_scale.dart';
 import 'package:video_player/video_player.dart';
 
 // Project imports:
 import 'package:ketsuro/src/common/colors.dart';
+import 'package:ketsuro/src/components/youtube/index.dart';
+import 'package:ketsuro/src/data/index.dart';
 
 class Details extends StatefulWidget {
   final VideoData video;

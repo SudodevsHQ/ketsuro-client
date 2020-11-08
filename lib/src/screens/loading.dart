@@ -1,13 +1,13 @@
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:ketsuro/src/common/colors.dart';
 
 // Package imports:
 import 'package:momentum/momentum.dart';
 import 'package:relative_scale/relative_scale.dart';
 
 // Project imports:
+import 'package:ketsuro/src/common/colors.dart';
 import 'package:ketsuro/src/components/youtube/index.dart';
 import 'home.dart';
 

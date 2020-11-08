@@ -43,7 +43,7 @@ class _LoadingState extends MomentumState<Loading> with RelativeScale {
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text('Trending Videos',
+                child: Text('Loading Videos',
                     style: TextStyle(
                       fontSize: sx(25),
                       fontWeight: FontWeight.bold,
@@ -77,6 +77,9 @@ class _LoadingState extends MomentumState<Loading> with RelativeScale {
               Expanded(
                 child: Container(),
               ),
+              Center(child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation(ketsuroRed),
+              )),
               SizedBox(
                 height: sy(70),
               )

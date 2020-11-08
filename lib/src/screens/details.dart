@@ -14,16 +14,18 @@ import 'package:ketsuro/src/common/colors.dart';
 
 class Details extends StatefulWidget {
   final VideoData video;
-
+  final String god;
   const Details({
     Key key,
     this.video,
+    this.god,
   }) : super(key: key);
   @override
   _DetailsState createState() => _DetailsState();
 }
 
 class _DetailsState extends MomentumState<Details> with RelativeScale {
+  VideoPlayerController _controller;
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -39,6 +41,17 @@ class _DetailsState extends MomentumState<Details> with RelativeScale {
         .first
         .data()['summary_video'];
 
+    _controller = VideoPlayerController.network(
+      'https://621e47ca71ab.ngrok.io/static/iZBIeM2zE-I.mp4',
+      videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true),
+    );
+
+    _controller.addListener(() {
+      setState(() {});
+    });
+    _controller.setLooping(true);
+    _controller.initialize();
+
     if (url == null) {
       var requestId = model.videoSnapshot.docs
           .where((element) => element.data()['video_id'] == widget.video.id)
@@ -50,6 +63,12 @@ class _DetailsState extends MomentumState<Details> with RelativeScale {
     }
 
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -86,14 +105,16 @@ class _DetailsState extends MomentumState<Details> with RelativeScale {
                       child: AspectRatio(
                         aspectRatio: 16 / 9,
                         child: ClipRRect(
-                            borderRadius: BorderRadius.circular(16),
-                            child: url == null
-                                ? CachedNetworkImage(
-                                    imageUrl: widget.video.thumbnail)
-                                : PlayerVideo(
-                                    url: url,
-                                    thing: widget.video.id,
-                                  )),
+                          borderRadius: BorderRadius.circular(16),
+                          child: Stack(
+                                  alignment: Alignment.bottomCenter,
+                                  children: <Widget>[
+                                    VideoPlayer(_controller),
+                                    // ClosedCaption(text: _controller.value.caption.text),
+                                    _ControlsOverlay(controller: _controller),
+                                  ],
+                                ),
+                        ),
                       ),
                     ),
                   ),
@@ -118,7 +139,7 @@ class _DetailsState extends MomentumState<Details> with RelativeScale {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Text(
-                          'Linus Tech Tips',
+                          widget.video.channel,
                           style: TextStyle(
                             color: ketsuroGrey,
                             fontWeight: FontWeight.bold,
@@ -257,55 +278,6 @@ class __ControlsOverlayState extends State<_ControlsOverlay>
             ),
           ),
         ),
-      ],
-    );
-  }
-}
-
-class PlayerVideo extends StatefulWidget {
-  final String url;
-  final String thing;
-  const PlayerVideo({Key key, this.url, this.thing}) : super(key: key);
-  @override
-  _PlayerVideoState createState() => _PlayerVideoState();
-}
-
-class _PlayerVideoState extends State<PlayerVideo> {
-  VideoPlayerController _controller;
-
-  @override
-  void initState() {
-    var god = 'http://15.207.237.105/static/' +
-        widget.thing +
-        '.mp4';
-    print(god);
-    _controller = VideoPlayerController.network(
-      god,
-      videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true),
-    );
-
-    _controller.addListener(() {
-      setState(() {});
-    });
-    _controller.setLooping(true);
-    _controller.initialize();
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      alignment: Alignment.bottomCenter,
-      children: <Widget>[
-        VideoPlayer(_controller),
-        // ClosedCaption(text: _controller.value.caption.text),
-        _ControlsOverlay(controller: _controller),
       ],
     );
   }

@@ -14,6 +14,7 @@ import 'package:ketsuro/src/common/colors.dart';
 import 'package:ketsuro/src/components/youtube/index.dart';
 
 import 'details.dart';
+import 'index.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -58,6 +59,21 @@ class _HomeState extends MomentumState<Home> with RelativeScale {
             appBar: AppBar(
               backgroundColor: Colors.transparent,
               elevation: 0,
+              title: TextFormField(
+                style: TextStyle(color: Colors.white),
+                decoration: InputDecoration(
+                    hintText: 'Search',
+                    hintStyle: TextStyle(color: Colors.white)),
+                onFieldSubmitted: (query) async {
+                  Navigator.push(
+                      context, CupertinoPageRoute(builder: (_) => Loading()));
+                  await model.controller
+                      .getTrendingTech(query);
+                  await model.controller.getCacheVideos();
+                  await model.controller.doRequest();
+                  Navigator.pop(context);
+                },
+              ),
             ),
             drawer: Drawer(),
             body: videos.isEmpty
@@ -147,26 +163,35 @@ class _HomeState extends MomentumState<Home> with RelativeScale {
                                             child: Icon(Icons.play_arrow),
                                             onPressed: () {
                                               var summary = db.docs
-                                        .where((element) =>
-                                            element.data()['video_id'] ==
-                                            videos[currentPage.toInt()].id)
-                                        .isNotEmpty
-                                    ? db.docs
-                                        .where((element) =>
-                                            element.data()['video_id'] ==
-                                            videos[currentPage.toInt()].id)
-                                        .first['summary']
-                                    : null;
+                                                      .where((element) =>
+                                                          element.data()[
+                                                              'video_id'] ==
+                                                          videos[currentPage
+                                                                  .toInt()]
+                                                              .id)
+                                                      .isNotEmpty
+                                                  ? db.docs
+                                                      .where((element) =>
+                                                          element.data()[
+                                                              'video_id'] ==
+                                                          videos[currentPage
+                                                                  .toInt()]
+                                                              .id)
+                                                      .first['summary']
+                                                  : null;
 
                                               if (summary != null) {
-                                                
+                                                var god =
+                                                    'https://621e47ca71ab.ngrok.io/static/' +
+                                                        current.id +
+                                                        '.mkv';
+                                                print(god);
                                                 Navigator.push(
                                                   context,
                                                   CupertinoPageRoute(
                                                     builder: (_) => Details(
-                                                     
-                                                      video: current
-                                                    ),
+                                                        god: god,
+                                                        video: current),
                                                   ),
                                                 );
                                               } else {
@@ -177,16 +202,7 @@ class _HomeState extends MomentumState<Home> with RelativeScale {
                                                 )..show(context);
                                               }
 
-                                              // print(vid);
-                                              // if (vid.isNotEmpty) {
-                                              //   var summary =
-                                              //       vid.first.data()['summary'];
-                                              //   var id = vid.first
-                                              //       .data()['video_id'];
 
-                                              // } else {
-
-                                              // }
                                             },
                                           ),
                                         ),
@@ -219,12 +235,15 @@ class _HomeState extends MomentumState<Home> with RelativeScale {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
-                              Text(
-                                'Linus Tech Tips',
-                                style: TextStyle(
-                                  color: ketsuroGrey,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: sx(22),
+                              Expanded(
+                                                              child: Text(
+                                  videos[currentPage.toInt()].channel,
+                                  maxLines: 1,
+                                  style: TextStyle(
+                                    color: ketsuroGrey,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: sx(22),
+                                  ),
                                 ),
                               ),
                               Image.asset('assets/youtube.png', scale: 2)

@@ -1,14 +1,19 @@
 // Flutter imports:
+import 'package:flushbar/flushbar.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:ketsuro/src/data/index.dart';
 import 'package:momentum/momentum.dart';
 import 'package:relative_scale/relative_scale.dart';
 
 // Project imports:
 import 'package:ketsuro/src/common/colors.dart';
 import 'package:ketsuro/src/components/youtube/index.dart';
+
+import 'details.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -26,12 +31,13 @@ class _HomeState extends MomentumState<Home> with RelativeScale {
 
   @override
   void initMomentumState() async {
-    currentPage = 0;
-
+    var c = Momentum.controller<YoutubeController>(context);
+    videos = c.model.videos;
     super.initMomentumState();
   }
 
-  double currentPage;
+  double currentPage = 0;
+  List<VideoData> videos;
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +52,7 @@ class _HomeState extends MomentumState<Home> with RelativeScale {
       controllers: [YoutubeController],
       builder: (context, snapshot) {
         var model = snapshot<YoutubeModel>();
+        var db = model.videoSnapshot;
         var videos = model.videos;
         return Scaffold(
             appBar: AppBar(
@@ -97,7 +104,7 @@ class _HomeState extends MomentumState<Home> with RelativeScale {
                                   curve: Curves.easeInQuad,
                                   duration: Duration(milliseconds: 200),
                                   padding: index == currentPage
-                                      ? EdgeInsets.all( 8.0)
+                                      ? EdgeInsets.all(8.0)
                                       : EdgeInsets.all(18),
                                   child: Stack(
                                     children: [
@@ -135,9 +142,63 @@ class _HomeState extends MomentumState<Home> with RelativeScale {
                                         child: Padding(
                                           padding: const EdgeInsets.all(8.0),
                                           child: FloatingActionButton(
+                                            heroTag: current.thumbnail,
                                             backgroundColor: ketsuroRed,
                                             child: Icon(Icons.play_arrow),
-                                            onPressed: () {},
+                                            onPressed: () {
+                                              var summary = db.docs
+                                                      .where((element) =>
+                                                          element.data()[
+                                                              'video_id'] ==
+                                                          videos[currentPage
+                                                                  .toInt()]
+                                                              .id)
+                                                      .isNotEmpty
+                                                  ? db.docs
+                                                      .where((element) =>
+                                                          element.data()[
+                                                              'video_id'] ==
+                                                          videos[currentPage
+                                                                  .toInt()]
+                                                              .id)
+                                                      .first['summary']
+                                                  : null;
+
+                                              if (summary != null) {
+                                                var vid = db.docs
+                                                    .where((element) =>
+                                                        element['video_id'] ==
+                                                        videos[currentPage
+                                                            .toInt()])
+                                                    .first['request_id'];
+                                                Navigator.push(
+                                                  context,
+                                                  CupertinoPageRoute(
+                                                    builder: (_) => Details(
+                                                      summary: summary,
+                                                      videoId: vid,
+                                                    ),
+                                                  ),
+                                                );
+                                              } else {
+                                                Flushbar(
+                                                  message: "OOPS!",
+                                                  duration:
+                                                      Duration(seconds: 2),
+                                                )..show(context);
+                                              }
+
+                                              // print(vid);
+                                              // if (vid.isNotEmpty) {
+                                              //   var summary =
+                                              //       vid.first.data()['summary'];
+                                              //   var id = vid.first
+                                              //       .data()['video_id'];
+
+                                              // } else {
+
+                                              // }
+                                            },
                                           ),
                                         ),
                                       ),
@@ -170,7 +231,7 @@ class _HomeState extends MomentumState<Home> with RelativeScale {
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               Text(
-                                'Elon Musk',
+                                'Linus Tech Tips',
                                 style: TextStyle(
                                   color: ketsuroGrey,
                                   fontWeight: FontWeight.bold,
@@ -205,12 +266,17 @@ class _HomeState extends MomentumState<Home> with RelativeScale {
                                 SizedBox(
                                   height: 10,
                                 ),
-                                Text(
-                                    '''Today we are finally liquid, calling the Rtx 3090 which is something that I've been so excited to do ever since it was first announced, but also a bit hesitant because this thing pulls around 350 watts on its own. S o, in this video, we'll be taking a look at how much radiator volume you actually need to keep this thing. 
-
-Keep in mind that for the RTX 3090 you also have some memory modules on the back of the PCB as well and this is the water block that we'll be using with it. 
- 
-You'd at least expect these to be cut to the correct size, not to mention the possibility of user error here is pretty high, but what we're left with is an insanely dense piece of hardware and that gets me really excited for all of the possibilities when it comes to installing this into your board called PC even in a mid-tower build, this will give you a bit more breathing room for a pump and reservoir compared to your standard water block, which will typically be around 50 mils longer, but now let's talk about cooling. ''')
+                                Text(db.docs
+                                        .where((element) =>
+                                            element.data()['video_id'] ==
+                                            videos[currentPage.toInt()].id)
+                                        .isNotEmpty
+                                    ? db.docs
+                                        .where((element) =>
+                                            element.data()['video_id'] ==
+                                            videos[currentPage.toInt()].id)
+                                        .first['summary']
+                                    : 'Not found')
                               ],
                             ),
                           ),

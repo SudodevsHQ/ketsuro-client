@@ -1,14 +1,23 @@
 // Package imports:
-import 'package:googleapis/youtube/v3.dart';
-import 'package:googleapis_auth/auth_io.dart';
-import 'package:momentum/momentum.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'package:momentum/momentum.dart';
+import 'package:http/http.dart' as http;
 // Project imports:
-import 'package:ketsuro/src/config/config.dart';
+
 import 'package:ketsuro/src/data/index.dart';
+import 'package:youtube_api/youtube_api.dart';
 import 'index.dart';
 
 class YoutubeController extends MomentumController<YoutubeModel> {
+  @override
+  Future<void> bootstrapAsync() async {
+    await getTrendingTech();
+    await getCacheVideos();
+    await doRequest();
+    return super.bootstrapAsync();
+  }
+
   @override
   YoutubeModel init() {
     return YoutubeModel(this, videos: []);
@@ -16,48 +25,79 @@ class YoutubeController extends MomentumController<YoutubeModel> {
 
   Future getTrendingTech() async {
     List<VideoData> res = [];
-    var httpClient = await clientViaServiceAccount(credentials, scopes);
 
-    var youtube = new YoutubeApi(httpClient);
-    var subs = await youtube.videos.list(
-      [
-        'snippet',
-      ],
-      chart: 'mostPopular',
-      videoCategoryId: '28',
-      maxResults: 10,
-      regionCode: 'US',
-    );
-    subs.items.forEach((element) {
-      print(element.snippet.title +
-          'https://www.youtube.com/watch?v=' +
-          element.id);
+    String key = 'AIzaSyDdOIWH8lMlUFwAV0vQTM68Xfars8u7MJc';
+    YoutubeAPI ytApi = new YoutubeAPI(key);
 
+    var ress = await ytApi.search('Linus Tech Tips',);
+    ress.forEach((element) {
       res.add(VideoData(
-        url: 'https://www.youtube.com/watch?v=' + element.id,
-        title: element.snippet.title,
-        channel: element.snippet.channelId,
-        thumbnail: element.snippet.thumbnails.maxres.url,
-      ));
+          url: 'https://www.youtube.com/watch?v=' + element.id,
+          title: element.title,
+          channel: 'Linus Tech Tips',
+          thumbnail: element.thumbnail['high']['url'],
+          id: element.id));
     });
+    res.removeAt(0);
     model.update(videos: res);
   }
 
-  Future getVideos() async {
+  Future getCacheVideos() async {
+    var videoIds = model.videos.map((e) => e.id).toList();
+    print(videoIds);
     // ignore: cancel_subscriptions
-    // var questionsSubscription = FirebaseFirestore.instance
-    //     .collection('questions')
-    //     .where('course', isEqualTo: model.course.id)
-    //     .snapshots()
-    //     .listen((querySnapshot) {
-    //   model.update(questionsSnapshot: querySnapshot);
-    //   model.questionsSubscription.onError((error, stackTrace) {
-    //     print(error);
-    //     print(stackTrace);
-    //   });
-    // });
+    var videoSubscription = FirebaseFirestore.instance
+        .collection('video')
+        .where('video_id', whereIn: videoIds)
+        .snapshots()
+        .listen((querySnapshot) {
+      model.update(videoSnapshot: querySnapshot);
+      model.videoSubscription.onError((error, stackTrace) {
+        print(error);
+        print(stackTrace);
+      });
+    });
 
-    // model.update(
-    //     questionsSubscription: questionsSubscription, isLoading: false);
+    model.update(videoSubscription: videoSubscription);
+  }
+
+  Future doRequest() async {
+    var videoIds = model.videos.map((e) => e.id).toList();
+    print(videoIds);
+    var snapshot = model.videoSnapshot;
+    try {
+      // print(snapshot.docs.length);
+      var ok = snapshot.docs.map((e) => e.data()['video_id']).toList();
+      for (var id in videoIds) {
+        if (!ok.contains(id)) {
+          var res = await http.get('https://621e47ca71ab.ngrok.io/video/$id');
+          print(res.reasonPhrase);
+          print('noexist');
+        }
+      }
+    } catch (e) {
+      for (var id in videoIds) {
+        var res = await http.get('https://621e47ca71ab.ngrok.io/video/$id');
+        print(res.reasonPhrase);
+        print('request');
+      }
+    }
+  }
+
+  Future<void> disposeStream() async {
+    await model.videoSubscription.cancel();
+  }
+
+  Future<bool> addQuestion() async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('video')
+          .doc('test')
+          .set({'video_id': 'sdfsfsfs'});
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
   }
 }

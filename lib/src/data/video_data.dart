@@ -3,8 +3,9 @@ class VideoData {
   final String channel;
   final String url;
   final String thumbnail;
+  final String id;
 
-  VideoData({this.title, this.channel, this.url, this.thumbnail});
+  VideoData({this.title, this.channel, this.url, this.thumbnail, this.id});
 
   Map<String, dynamic> toJson() {
     return {
@@ -12,6 +13,7 @@ class VideoData {
       'channel': channel,
       'url': url,
       'thumbnail': thumbnail,
+      'id': id,
     };
   }
 
@@ -23,6 +25,7 @@ class VideoData {
       channel: map['channel'],
       url: map['url'],
       thumbnail: map['thumbnail'],
+      id: map['id'],
     );
   }
 }

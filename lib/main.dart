@@ -26,9 +26,10 @@ Momentum momentum() {
     restartCallback: main,
     key: UniqueKey(),
     child: MyApp(),
+    appLoader: MaterialApp(home: Loading(),),
     controllers: [
       LoginController(),
-      YoutubeController(),
+      YoutubeController()..config(lazy: false),
     ],
     services: [
       ClientDB(),
@@ -67,7 +68,7 @@ class MyApp extends StatelessWidget {
         builder: (context, snapshot) {
           var model = snapshot<LoginModel>();
           if (model.isLoggedIn) {
-            return Loading();
+            return Home();
           } else {
             return Ketsuro();
           }

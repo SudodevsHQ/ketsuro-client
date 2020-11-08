@@ -1,6 +1,7 @@
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:ketsuro/src/common/colors.dart';
 
 // Package imports:
 import 'package:momentum/momentum.dart';
@@ -24,21 +25,13 @@ class _LoadingState extends MomentumState<Loading> with RelativeScale {
 
   @override
   void initMomentumState() async {
-    var ytController = Momentum.controller<YoutubeController>(context);
-    await ytController.getTrendingTech();
-    Navigator.push(
-      context,
-      CupertinoPageRoute(
-        builder: (_) => Home(),
-      ),
-    );
-
     super.initMomentumState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: ketsuroBrown,
       body: SafeArea(
         child: Center(
           child: Column(
@@ -54,6 +47,7 @@ class _LoadingState extends MomentumState<Loading> with RelativeScale {
                     style: TextStyle(
                       fontSize: sx(25),
                       fontWeight: FontWeight.bold,
+                      color: Colors.white
                     )),
               ),
               Expanded(
@@ -70,6 +64,7 @@ class _LoadingState extends MomentumState<Loading> with RelativeScale {
                   style: TextStyle(
                     fontSize: sx(24),
                     fontWeight: FontWeight.w900,
+                    color: Colors.white
                   ),
                 ),
               ),

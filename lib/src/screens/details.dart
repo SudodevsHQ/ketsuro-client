@@ -9,6 +9,14 @@ import 'package:video_player/video_player.dart';
 import 'package:ketsuro/src/common/colors.dart';
 
 class Details extends StatefulWidget {
+  final String videoId;
+  final String summary;
+
+  const Details({
+    Key key,
+    this.videoId,
+    this.summary,
+  }) : super(key: key);
   @override
   _DetailsState createState() => _DetailsState();
 }
@@ -133,12 +141,7 @@ class _DetailsState extends State<Details> with RelativeScale {
                     SizedBox(
                       height: 10,
                     ),
-                    Text(
-                        '''Today we are finally liquid, calling the Rtx 3090 which is something that I've been so excited to do ever since it was first announced, but also a bit hesitant because this thing pulls around 350 watts on its own. S o, in this video, we'll be taking a look at how much radiator volume you actually need to keep this thing. 
-
-Keep in mind that for the RTX 3090 you also have some memory modules on the back of the PCB as well and this is the water block that we'll be using with it. 
- 
-You'd at least expect these to be cut to the correct size, not to mention the possibility of user error here is pretty high, but what we're left with is an insanely dense piece of hardware and that gets me really excited for all of the possibilities when it comes to installing this into your board called PC even in a mid-tower build, this will give you a bit more breathing room for a pump and reservoir compared to your standard water block, which will typically be around 50 mils longer, but now let's talk about cooling. ''')
+                    Text(widget.summary ?? '')
                   ],
                 ),
               ),

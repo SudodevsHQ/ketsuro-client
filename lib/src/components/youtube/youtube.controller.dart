@@ -12,7 +12,7 @@ import 'index.dart';
 class YoutubeController extends MomentumController<YoutubeModel> {
   @override
   Future<void> bootstrapAsync() async {
-    await getTrendingTech();
+    await getTrendingTech('Jerry rig everything');
     await getCacheVideos();
     await doRequest();
     return super.bootstrapAsync();
@@ -23,20 +23,20 @@ class YoutubeController extends MomentumController<YoutubeModel> {
     return YoutubeModel(this, videos: []);
   }
 
-  Future getTrendingTech() async {
+  Future getTrendingTech(String query) async {
     List<VideoData> res = [];
 
     String key = 'AIzaSyDdOIWH8lMlUFwAV0vQTM68Xfars8u7MJc';
     YoutubeAPI ytApi = new YoutubeAPI(key);
 
     var ress = await ytApi.search(
-      'Linus Tech Tips',
+      query,
     );
     ress.forEach((element) {
       res.add(VideoData(
           url: 'https://www.youtube.com/watch?v=' + element.id,
           title: element.title,
-          channel: 'Linus Tech Tips',
+          channel: element.channelTitle,
           thumbnail: element.thumbnail['high']['url'],
           id: element.id));
     });

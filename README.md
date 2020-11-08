@@ -1,4 +1,4 @@
-# KETSURO
+# KETSURO (Japanese -> Condensed)
 
 The only mobile app you need to summarize long video in short ones
 while providing you with text summary!

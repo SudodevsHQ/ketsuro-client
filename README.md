@@ -11,7 +11,6 @@ while providing you with text summary!
 
 </p>
 
-<img width="1352" alt="image" src="https://github.com/user-attachments/assets/75b4da3e-29fa-4ffb-8f8f-6c8357924a57" />
 
 
 ## Client-Side Tools / Libraries

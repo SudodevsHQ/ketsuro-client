@@ -11,10 +11,8 @@ while providing you with text summary!
 
 </p>
 
-<p align="center">
-  <img width="150"  src="https://cdn.discordapp.com/attachments/683669768401715221/774953943150886912/Screenshot_20201108-161742893.jpg">   <img width="150"  src="https://cdn.discordapp.com/attachments/683669768401715221/774953943565598750/Screenshot_20201108-161809802.jpg">  <img width="150"  src="https://cdn.discordapp.com/attachments/774323108143431682/774927423451430923/unknown.png">
- 
-</p>
+<img width="1352" alt="image" src="https://github.com/user-attachments/assets/75b4da3e-29fa-4ffb-8f8f-6c8357924a57" />
+
 
 ## Client-Side Tools / Libraries
 - Flutter - http://flutter.dev/
